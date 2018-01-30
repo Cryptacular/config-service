@@ -18,6 +18,7 @@ A website with API that allows the user to generate a configuration file based o
   - ...
 - API
 - Database
+- Unit tests
 
 ## To Do
 
