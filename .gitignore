@@ -14,5 +14,8 @@
 .glide/
 
 # Sample files
+main
 sample.config
 config-service
+*.zip
+.aws

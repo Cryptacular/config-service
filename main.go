@@ -1,24 +1,41 @@
 package main
 
 import (
+	"bytes"
 	"encoding/xml"
-	"net/http"
+	"errors"
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
+	"log"
 )
 
-func main() {
-	http.HandleFunc("/", get)
-	http.ListenAndServe(":3000", nil)
+var (
+	errNameNotProvided = errors.New("no name was provided in the HTTP body")
+)
+
+func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	log.Printf("Processing Lambda request %s\n", request.RequestContext.RequestID)
+
+	x := createXMLString()
+
+	return events.APIGatewayProxyResponse{
+		Body:       x,
+		StatusCode: 200,
+		Headers:    map[string]string{"Accept": "application/xml"},
+	}, nil
 }
 
-func get(w http.ResponseWriter, r *http.Request) {
+func main() {
+	lambda.Start(handler)
+}
+
+func createXMLString() string {
 	data := config{}
 
-	x, err := xml.MarshalIndent(data, "", "    ")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	buf := new(bytes.Buffer)
+	enc := xml.NewEncoder(buf)
+	enc.Indent("", "    ")
+	enc.Encode(data)
 
-	w.Header().Set("Content-Type", "application/xml")
-	w.Write(x)
+	return buf.String()
 }

@@ -24,7 +24,8 @@ A website with API that allows the user to generate a configuration file based o
 
 ---
 
-- [ ]  Start with a web API framework that's good at apis.
-- [ ]  Create a configuration endpoint that serializes a similar configuration that we might use for say ISW
-- [ ]  Setup a DB. Relational or document/nosql, configurable by environment (dev, prod, uat)
-- [ ]  Integrate GraphQL to fetch data from database
+- [x] Host on AWS Lambda
+  - [ ] Return XML from endpoint
+- [ ] Do not show empty XML tags
+- [ ] Implement GraphQL
+- [ ] Setup a DB. Relational or document/nosql, configurable by environment (dev, prod, uat)
