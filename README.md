@@ -4,7 +4,9 @@
 
 ---
 
-A website with API that allows the user to generate a configuration file based on settings, similar to something we'd use for InfoSmart Web. It will be hosted on AWS.
+A website with API that allows the user to generate a configuration file based on various input parameters. It will be hosted on AWS.
+
+Possible use case: A/B testing.
 
 ## Features
 
@@ -25,7 +27,6 @@ A website with API that allows the user to generate a configuration file based o
 ---
 
 - [x] Host on AWS Lambda
-  - [ ] Return XML from endpoint
-- [ ] Do not show empty XML tags
+- [ ] Change to JSON
 - [ ] Implement GraphQL
 - [ ] Setup a DB. Relational or document/nosql, configurable by environment (dev, prod, uat)
