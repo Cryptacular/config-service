@@ -1,41 +1,57 @@
 package main
 
 import (
-	"bytes"
-	"encoding/xml"
+	"context"
+	"encoding/json"
 	"errors"
+	"github.com/Cryptacular/config-service/database"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/neelance/graphql-go"
 	"log"
 )
 
 var (
-	errNameNotProvided = errors.New("no name was provided in the HTTP body")
+	// ErrQueryNameNotProvided is returned when no query was provided in the HTTP body
+	ErrQueryNameNotProvided = errors.New("no query was provided in the HTTP body")
+	schema                  *graphql.Schema
 )
 
-func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	log.Printf("Processing Lambda request %s\n", request.RequestContext.RequestID)
-
-	x := createXMLString()
-
-	return events.APIGatewayProxyResponse{
-		Body:       x,
-		StatusCode: 200,
-		Headers:    map[string]string{"Accept": "application/xml"},
-	}, nil
+func init() {
+	schema = graphql.MustParseSchema(database.Schema, &database.Resolver{})
 }
 
 func main() {
-	lambda.Start(handler)
+	lambda.Start(Handler)
 }
 
-func createXMLString() string {
-	data := config{}
+// Handler for AWS Lambda
+func Handler(context context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	log.Printf("Processing Lambda request %s\n", request.RequestContext.RequestID)
 
-	buf := new(bytes.Buffer)
-	enc := xml.NewEncoder(buf)
-	enc.Indent("", "    ")
-	enc.Encode(data)
+	if len(request.Body) < 1 {
+		return events.APIGatewayProxyResponse{}, ErrQueryNameNotProvided
+	}
 
-	return buf.String()
+	var params struct {
+		Query         string                 `json:"query"`
+		OperationName string                 `json:"operationName"`
+		Variables     map[string]interface{} `json:"variables"`
+	}
+
+	if err := json.Unmarshal([]byte(request.Body), &params); err != nil {
+		log.Print("Could not deserialise body", err)
+	}
+
+	response := schema.Exec(context, params.Query, params.OperationName, params.Variables)
+	responseJSON, err := json.Marshal(response)
+
+	if err != nil {
+		log.Print("Could not serialise body")
+	}
+
+	return events.APIGatewayProxyResponse{
+		Body:       string(responseJSON),
+		StatusCode: 200,
+	}, nil
 }

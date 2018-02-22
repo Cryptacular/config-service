@@ -13,9 +13,10 @@
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/
 
-# Sample files
+# Others
 main
 sample.config
 config-service
 *.zip
 .aws
+.vscode
