@@ -1,4 +1,4 @@
-package database
+package schema
 
 // Schema for the configuration GraphQL service.
 var Schema = `
@@ -7,9 +7,18 @@ var Schema = `
 	}
 	type Query {
 		configuration(id: ID!): Configuration
+		abTests(id: ID!): [AbTest]!
 	}
 	type Configuration {
-		userId: ID!
+		id: ID!
 		country: String!
+		environment: String!
+	}
+	type AbTest {
+		id: ID!
+		userId: ID!
+		name: String!
+		segment: String!
+		expiry: String!
 	}
 `

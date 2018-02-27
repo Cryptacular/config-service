@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/Cryptacular/config-service/database"
+	"github.com/Cryptacular/config-service/schema"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/neelance/graphql-go"
@@ -14,14 +14,15 @@ import (
 var (
 	// ErrQueryNameNotProvided is returned when no query was provided in the HTTP body
 	ErrQueryNameNotProvided = errors.New("no query was provided in the HTTP body")
-	schema                  *graphql.Schema
+	gqlSchema               *graphql.Schema
 )
 
 func init() {
-	schema = graphql.MustParseSchema(database.Schema, &database.Resolver{})
+	gqlSchema = graphql.MustParseSchema(schema.Schema, &schema.Resolver{})
 }
 
 func main() {
+	println("Starting Config Service...")
 	lambda.Start(Handler)
 }
 
@@ -43,7 +44,7 @@ func Handler(context context.Context, request events.APIGatewayProxyRequest) (ev
 		log.Print("Could not deserialise body", err)
 	}
 
-	response := schema.Exec(context, params.Query, params.OperationName, params.Variables)
+	response := gqlSchema.Exec(context, params.Query, params.OperationName, params.Variables)
 	responseJSON, err := json.Marshal(response)
 
 	if err != nil {
