@@ -8,7 +8,10 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/neelance/graphql-go"
+	"github.com/neelance/graphql-go/relay"
 	"log"
+	"net/http"
+	"os"
 )
 
 var (
@@ -22,8 +25,25 @@ func init() {
 }
 
 func main() {
-	println("Starting Config Service...")
-	lambda.Start(Handler)
+	if isDebug() {
+		println("Starting Config Service in debug mode on localhost:8001...")
+		debugHandler()
+	} else {
+		println("Starting Config Service...")
+		lambda.Start(Handler)
+	}
+}
+
+func isDebug() bool {
+	args := []string{}
+	args = os.Args[1:]
+
+	return args != nil && len(args) > 0 && (args[0] == "--debug" || args[0] == "-d")
+}
+
+func debugHandler() {
+	http.Handle("/", &relay.Handler{Schema: gqlSchema})
+	log.Fatal(http.ListenAndServe(":8001", nil))
 }
 
 // Handler for AWS Lambda
