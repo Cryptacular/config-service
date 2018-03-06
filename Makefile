@@ -1,4 +1,4 @@
-all: build test
+all: deps build test
 
 build:
 	go build -o main

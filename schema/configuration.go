@@ -1,7 +1,7 @@
 package schema
 
 import (
-	"github.com/neelance/graphql-go"
+	"github.com/graph-gophers/graphql-go"
 	"time"
 )
 
