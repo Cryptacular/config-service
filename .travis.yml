@@ -2,3 +2,15 @@ language: go
 
 go:
   - "1.x"
+
+deploy:
+  provider: lambda
+  function_name: "ConfigService"
+  region: "ap-southeast-2"
+  role: "arn:aws:iam::852458592274:role/Lambda"
+  runtime: "go1.x"
+  handler_name: "main"
+  access_key_id: "AKIAJHJVUJGZSVE3S53Q"
+  secret_access_key: "HGPvvkRsntUSJaN4p518aUboj0eESeURyfwWpj3WDBuFOgVXnWtvBLM10gPmX7vEk6KnmpSonGQlw8UhpxhK0Ol/yV/cVO3rBIyXL5woT8W75xahz2skUypqTPMuhct4XIzfJSvz1W4ZrEyGfwTeywHVd0rCxfM1C5qqm9wJlmHb/voFCTdak2P3R5hRxDxNftn9eMRk0IMSZZIF9AdzT3UG1F13Wt7vKbY+EY4Ky29z0LMDDIWWrEEIktQHR4hUq9XvLj1cCBwVg0yLeBk6KyBVWesTwe28RfadkbCtRc7kPz1zxlxX7Fd2s1wurI8vEV/0gPyMBJQXakmtlIsW8+cKYDHpkkBxhkgra2AAUz6709VMQp700NbxQLik+bBFemj+DTSfJB0lW8oBs7d8mMa47Bc+1j18hQjXfSOx0rA3MzywpMfKL/oUu21La616YiSC/XmHvfhttmhnBOt5Paq9BfDrS0H3hs1vzE6VHd8n6ITFBoWaVqAbQh00zoU/XV2Qjbsferf8ZL8gW38zhWfMN3Z5kRlS8aPDU2vm+LErz37eni/HnX3WChs0FOxih3iLzjYc0aKAG5grjVv1nK6Khe8t3vnN50H+BfFDnWksXwIxZdGLEQgjrjRuL53gDHFgmr7kB0QY7FcLl5zvky5DPQZMPid9GtkYHRz8hYk="
+  on:
+    branch: master
