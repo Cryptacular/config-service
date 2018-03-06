@@ -1,5 +1,7 @@
 # Go Configuration Service
 
+[![Build Status](https://travis-ci.org/Cryptacular/config-service.svg?branch=master)](https://travis-ci.org/Cryptacular/config-service)
+
 ## Overview
 
 A website with API that allows the user to generate a configuration file based on various input parameters. It will be hosted on AWS.
@@ -33,8 +35,8 @@ The API will then return JSON with the following structure:
 
 ```json
 {
-  configuration: {},
-  abtests: {}
+  "configuration": {},
+  "abtests": {}
 }
 ```
 
@@ -47,4 +49,5 @@ Where `configuration` will contain information like country configuration, compa
 - [x] Host on AWS Lambda
 - [x] Change to JSON
 - [x] Implement GraphQL
+- [x] Implement CI
 - [ ] Setup a DB. Relational or document/nosql, configurable by environment (dev, prod, uat)
